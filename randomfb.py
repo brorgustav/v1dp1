@@ -4,7 +4,8 @@
 This script writes random patterns to a framebuffer device.  The overlay can
 have configurable opacity and color mapping.  It is useful when the Pi is
 outputting video on another layer (e.g. /dev/fb0) and you want a random noise
-layer on top (/dev/fb1).
+layer on top (/dev/fb1).  Provide ``--seed`` to generate deterministic noise
+patterns.
 """
 
 import argparse
@@ -13,8 +14,19 @@ import mmap
 import os
 import sys
 import time
+from typing import Optional
 
 import numpy as np
+
+
+def read_numeric(path: str) -> Optional[float]:
+    """Read a numeric value from a file path."""
+    try:
+        with open(path, "r") as f:
+            value_str = f.readline().strip()
+            return float(value_str)
+    except Exception:
+        return None
 
 
 def parse_args():
@@ -27,6 +39,12 @@ def parse_args():
     p.add_argument("--colormap", choices=["gray", "hsv", "hot"], default="gray",
                    help="Color mapping for noise")
     p.add_argument("--fps", type=float, default=30.0, help="Frames per second")
+    p.add_argument("--seed", type=int, help="Random seed for reproducible output")
+    p.add_argument("--input-path", help="Path to numeric value for modulation")
+    p.add_argument("--min-value", type=float, default=0.0,
+                   help="Minimum input value for scaling")
+    p.add_argument("--max-value", type=float, default=1.0,
+                   help="Maximum input value for scaling")
     return p.parse_args()
 
 
@@ -59,6 +77,8 @@ def main():
     alpha = int(max(0.0, min(1.0, args.opacity)) * 255)
     frame_bytes = args.width * args.height * 4  # ARGB8888
 
+    rng = np.random.default_rng(args.seed)
+
     try:
         fb_fd = os.open(args.fb, os.O_RDWR)
     except FileNotFoundError:
@@ -67,7 +87,15 @@ def main():
     with mmap.mmap(fb_fd, frame_bytes, mmap.MAP_SHARED, mmap.PROT_WRITE) as m:
         dt = 1.0 / max(args.fps, 1)
         while True:
-            gray = np.random.rand(args.height, args.width).astype(np.float32)
+            gray = rng.random((args.height, args.width), dtype=np.float32)
+
+            if args.input_path:
+                val = read_numeric(args.input_path)
+                if val is not None:
+                    scale = (val - args.min_value) / (args.max_value - args.min_value)
+                    scale = max(0.0, min(1.0, scale))
+                    gray *= scale
+
             rgb = apply_colormap(gray, args.colormap)
             a = np.full((args.height, args.width, 1), alpha, dtype=np.uint8)
             frame = np.concatenate([a, rgb], axis=-1)
