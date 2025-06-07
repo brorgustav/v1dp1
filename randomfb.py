@@ -3,8 +3,8 @@
 
 This script writes random patterns to a framebuffer device.  The overlay can
 have configurable opacity and color mapping.  It is useful when the Pi is
-outputting video on another layer (e.g. /dev/fb1) and you want a random noise
-layer on top (/dev/fb0).  Provide ``--seed`` to generate deterministic noise
+outputting video on another layer (e.g. /dev/fb0) and you want a random noise
+layer on top (/dev/fb1).  Provide ``--seed`` to generate deterministic noise
 patterns.
 """
 
@@ -31,7 +31,7 @@ def read_numeric(path: str) -> Optional[float]:
 
 def parse_args():
     p = argparse.ArgumentParser(description="Random framebuffer overlay")
-    p.add_argument("--fb", default="/dev/fb0", help="Framebuffer device")
+    p.add_argument("--fb", default="/dev/fb1", help="Framebuffer device")
     p.add_argument("--width", type=int, default=640, help="Framebuffer width")
     p.add_argument("--height", type=int, default=480, help="Framebuffer height")
     p.add_argument("--opacity", type=float, default=0.5,
