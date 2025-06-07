@@ -1,10 +1,27 @@
-source /home/bgw/v1dp1/bgwxv1dp1/bin/activate
 
-sudo rm -r /home/bgw/v1dp1
-git clone https://github.com/brorgustav/v1dp1
-python3 /home/bgw/v1dp1/randomfb.py
 
-python3 /home/bgw/v1dp1/randomfb.py
+sudo rm v1dp1_rand.py
+touch v1dp1_rand.py
+sudo chmod a+x v1dp1_rand.py
+sudo nano v1dp1_rand.py
+python3 v1dp1_rand.py
+
+
+
+source /home/bgw/bgwxv1dp1/bin/activate
+
+sudo rm v1dp1_rand.py
+touch v1dp1_rand.py
+sudo chmod a+x v1dp1_rand.py
+sudo echo " " > v1dp1_rand.py
+python3 v1dp1_rand.py
+
+
+
+##sudo rm -r /home/bgw/v1dp1
+##git clone https://github.com/brorgustav/v1dp1
+##python3 /home/bgw/v1dp1/randomfb.py
+
 
 
 export PYTHONPATH="/home/bgw/bgwxv1dp1"
