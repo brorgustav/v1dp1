@@ -1,9 +1,18 @@
 source /home/bgw/v1dp1/bgwxv1dp1/bin/activate
 
-wget 
+sudo rm -r /home/bgw/v1dp1
+git clone https://github.com/brorgustav/v1dp1
+python3 /home/bgw/v1dp1/randomfb.py
 
 python3 /home/bgw/v1dp1/randomfb.py
 
+
+export PYTHONPATH="/home/bgw/bgwxv1dp1"
+
+
+If you want to change the PYTHONPATH used in a virtualenv, you can add the following line to your virtualenv's bin/activate file:
+
+export PYTHONPATH="/the/path/you/want"
 
 ### Usage
 
