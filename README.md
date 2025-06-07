@@ -14,6 +14,11 @@ sudo ./randomfb.py --fb /dev/fb1 --width 640 --height 480 \
                    --opacity 0.5 --colormap hsv --fps 30
 ```
 
+Make sure the `--width` and `--height` match your framebuffer's
+resolution. If they are smaller than the actual display, the overlay will
+only cover part of the screen. You can check the current resolution with
+`fbset -s` and pass the values to `randomfb.py` for a full-screen effect.
+
 Available colormaps: `gray`, `hsv`, `hot`.
 
 To modulate the noise with hardware input, provide a numeric file path using
