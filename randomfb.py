@@ -2,10 +2,11 @@
 """Generate random noise overlay on Raspberry Pi framebuffer.
 
 This script writes random patterns to a framebuffer device.  The overlay can
-have configurable opacity and color mapping.  It is useful when the Pi is
-outputting video on another layer (e.g. /dev/fb0) and you want a random noise
-layer on top (/dev/fb1).  Provide ``--seed`` to generate deterministic noise
-patterns.
+have configurable opacity and color mapping.  By default the framebuffer's
+current resolution is detected so the noise fills the entire screen.  It is
+useful when the Pi is outputting video on another layer (e.g. /dev/fb1) and you
+want a random noise layer on top (/dev/fb0).  Provide ``--seed`` to generate
+deterministic noise patterns.
 """
 
 import argparse
@@ -32,8 +33,8 @@ def read_numeric(path: str) -> Optional[float]:
 def parse_args():
     p = argparse.ArgumentParser(description="Random framebuffer overlay")
     p.add_argument("--fb", default="/dev/fb0", help="Framebuffer device")
-    p.add_argument("--width", type=int, default=640, help="Framebuffer width")
-    p.add_argument("--height", type=int, default=480, help="Framebuffer height")
+    p.add_argument("--width", type=int, help="Framebuffer width (auto-detect)")
+    p.add_argument("--height", type=int, help="Framebuffer height (auto-detect)")
     p.add_argument("--opacity", type=float, default=0.5,
                    help="Opacity 0.0-1.0 for overlay")
     p.add_argument("--colormap", choices=["gray", "hsv", "hot"], default="gray",
@@ -46,6 +47,19 @@ def parse_args():
     p.add_argument("--max-value", type=float, default=1.0,
                    help="Maximum input value for scaling")
     return p.parse_args()
+
+
+def get_fb_dimensions(fb: str) -> tuple[int, int]:
+    """Return the (width, height) of a framebuffer from sysfs."""
+    name = os.path.basename(fb)
+    sysfs = f"/sys/class/graphics/{name}/virtual_size"
+    try:
+        with open(sysfs, "r") as f:
+            text = f.read().strip()
+            w_str, h_str = text.split(",")
+            return int(w_str), int(h_str)
+    except Exception:
+        return 640, 480
 
 
 def apply_colormap(gray: np.ndarray, mode: str) -> np.ndarray:
@@ -74,6 +88,10 @@ def apply_colormap(gray: np.ndarray, mode: str) -> np.ndarray:
 
 def main():
     args = parse_args()
+    if args.width is None or args.height is None:
+        w, h = get_fb_dimensions(args.fb)
+        args.width = args.width or w
+        args.height = args.height or h
     alpha = int(max(0.0, min(1.0, args.opacity)) * 255)
     frame_bytes = args.width * args.height * 4  # ARGB8888
 
