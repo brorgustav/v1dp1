@@ -1,12 +1,9 @@
-# v1dp1
-video raspberry pi
+source /home/bgw/v1dp1/bgwxv1dp1/bin/activate
 
-Utilities for experimenting with video on the Raspberry Pi.
+wget 
 
-## Random Framebuffer Overlay
+python3 /home/bgw/v1dp1/randomfb.py
 
-`randomfb.py` generates a noisy overlay on a framebuffer device.  It can be
-layered over another video source when using the Pi's second framebuffer.
 
 ### Usage
 
