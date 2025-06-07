@@ -31,7 +31,7 @@ def read_numeric(path: str) -> Optional[float]:
 
 def parse_args():
     p = argparse.ArgumentParser(description="Random framebuffer overlay")
-    p.add_argument("--fb", default="/dev/fb1", help="Framebuffer device")
+    p.add_argument("--fb", default="/dev/fb0", help="Framebuffer device")
     p.add_argument("--width", type=int, default=640, help="Framebuffer width")
     p.add_argument("--height", type=int, default=480, help="Framebuffer height")
     p.add_argument("--opacity", type=float, default=0.5,
