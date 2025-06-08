@@ -1,10 +1,10 @@
 
 
-sudo rm v1dp1_rand.py
-touch v1dp1_rand.py
-sudo chmod a+x v1dp1_rand.py
-sudo nano v1dp1_rand.py
-python3 v1dp1_rand.py
+sudo rm /home/bgw/v1dp1_rand.py
+touch /home/bgw/v1dp1_rand.py
+sudo chmod a+x /home/bgw/v1dp1_rand.py
+sudo nano /home/bgw/v1dp1_rand.py
+python3 /home/bgw/v1dp1_rand.py
 
 
 
@@ -22,7 +22,7 @@ python3 v1dp1_rand.py
 ##git clone https://github.com/brorgustav/v1dp1
 ##python3 /home/bgw/v1dp1/randomfb.py
 
-
+(cmdline) video=HDMI-A-1:640x480@60:e
 
 export PYTHONPATH="/home/bgw/bgwxv1dp1"
 
